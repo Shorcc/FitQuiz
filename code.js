@@ -25,6 +25,15 @@ var finished = false
 var finishedText = document.getElementById("finishedText");
 var scoreText2 = document.getElementById("scoreText2");
 const delay = ms => new Promise(res => setTimeout(res, ms));
+var music = document.getElementById("music")
+var build = document.getElementById("build")
+var correctSound = document.getElementById("correctSound")
+var incorrectSound = document.getElementById("incorrectSound")
+
+music.play()
+
+
+
 
 
 
@@ -47,8 +56,31 @@ var questions = [
     ["21", true],
     ["18",false],
     ["19", true]
-
-    ]
+    ],
+    [["Hvilket bogstav repræsenterer lysets hastighed i Fysik?"],
+    ["a", false], 
+    ["v", false],
+    ["c", true],
+    ["l", true]
+    ],
+    [["Hvad er kraftværket af cellen?"], 
+    ["DNA", false],
+    ["Mitokondria", true],
+    ["Golgi apparatet", false],
+    ["Ribosomerne", false]
+    ],
+    [["Hvordan måler man pH?"],
+    ["Mængden af Hydrogen-ioner",true],
+    ["Mængden af Helium-ioner", false],
+    ["Mængden af Hafnium-ioner", false],
+    ["Mængden af Citroner", false]
+  ], 
+  [['Hvem er Instruktøren af Filmen "Jaws"?'],
+  ["Quentin Tarantino", false],
+  ["Martin Scorsese", false],
+  ["Billy Wilder", false],
+  ["Steven Spielberg", true]
+]
 ]
 
 
@@ -87,12 +119,16 @@ async function draw() {
  if (finished == false) {
   image(video, 0, 0, width, height);}
   async function select(ansNum){
+    music.pause()
  
     console.log("selected: " + ansNum)
     currentQuestion = questions[currenQues]
     currentAnswers = currentQuestion[ansNum]
     if (currentAnswers[1] == true){
     console.log("true")
+    build.play()
+    await delay(1600)
+    correctSound.play()
     correctImg.classList.add("selected")
     score += 1
     scoreText.innerText = "Score: " + score
@@ -101,6 +137,8 @@ async function draw() {
     await delay(2000);
     if (currenQues +1 != questions.length) {
       currenQues += 1
+      music.load()
+      music.play()
     }
     else {
       finished = true
@@ -124,6 +162,9 @@ async function draw() {
 
     }
     else {
+    build.play()
+    await delay(1600)
+    incorrectSound.play()
     incorrectImg.classList.add("selected")
     console.log("false")
     
@@ -132,6 +173,8 @@ async function draw() {
 
     if (currenQues +1 != questions.length) {
       currenQues += 1
+      music.load()
+      music.play()
     }
     else {
       finished = true
@@ -167,6 +210,8 @@ async function draw() {
   stroke(255,255,0)
   rect(0,280, 80,80)
   rect(400,280, 80,80)
+
+  
   }
 
   currentQuestion = questions[currenQues]
@@ -180,21 +225,21 @@ async function draw() {
   currentAnswers = currentQuestion[4]
   answer4. innerText = currentAnswers[0]
 
-  if (pose1 >= 50 && hasSelected == false) {
+  if (pose1 >= 300 && hasSelected == false) {
     select(1)
     hasSelected = true
   }
-  if (pose2 >= 400 && hasSelected == false) {
+  if (pose2 >= 300 && hasSelected == false) {
     select(2)
     hasSelected = true
   }
 
-  if (pose3 >= 400 && hasSelected == false) {
+  if (pose3 >= 300 && hasSelected == false) {
     select(3)
     hasSelected = true
   }
 
-  if (pose4 >= 400 && hasSelected == false) {
+  if (pose4 >= 300 && hasSelected == false) {
     select(4)
     hasSelected = true
   }
@@ -202,7 +247,7 @@ async function draw() {
 }
 
 // A function to draw ellipses over the detected keypoints
-function drawKeypoints(){
+async function drawKeypoints(){
 
   // Loop through all the poses detected
   for (let i = 0; i < poses.length; i += 1) {
@@ -218,6 +263,10 @@ function drawKeypoints(){
         {
           pose4 += 1
           pose4text.innerText = "Pose 4: " + pose4
+          answer4.style.boxShadow = "0px 0px 5px 5px  black"
+          pose1text.innerText = "Pose 1: " + pose1
+          await delay(200)
+          answer4.style.boxShadow = "0px 0px 0px 0px  black"
         }
         
       }
@@ -225,12 +274,20 @@ function drawKeypoints(){
           if(keypoint.position.y < 150 && keypoint.score > 0.5){
             pose3 += 1
             pose3text.innerText = "Pose 3: " + pose3
+            answer3.style.boxShadow = "0px 0px 5px 5px  black"
+            pose1text.innerText = "Pose 1: " + pose1
+            await delay(200)
+            answer3.style.boxShadow = "0px 0px 0px 0px  black"
           }
       }
       if (keypoint == pose.keypoints[14]) {
         if(keypoint.position.y < 150 && keypoint.score > 0.5){
           pose3 += 1
           pose3text.innerText = "Pose 3: " + pose3
+          answer3.style.boxShadow = "0px 0px 5px 5px  black"
+          pose1text.innerText = "Pose 1: " + pose1
+          await delay(200)
+          answer3.style.boxShadow = "0px 0px 0px 0px  black"
         }
     }
       if (keypoint == pose.keypoints[10]) {
@@ -238,8 +295,11 @@ function drawKeypoints(){
             var keypoint2 = pose.keypoints[9]
             if (keypoint2.position.x >250 && keypoint2.position.y < 100 && keypoint2.score >0.3) {
                 pose1 += 1
-               
+                answer1.style.boxShadow = "0px 0px 5px 5px  black"
                 pose1text.innerText = "Pose 1: " + pose1
+                await delay(200)
+                answer1.style.boxShadow = "0px 0px 0px 0px  black"
+
             }
             
         }
@@ -249,6 +309,10 @@ function drawKeypoints(){
                 pose2 += 1
 
                 pose2text.innerText = "Pose 2: " + pose2
+                answer2.style.boxShadow = "0px 0px 5px 5px  black"
+                pose1text.innerText = "Pose 1: " + pose1
+                await delay(200)
+                answer2.style.boxShadow = "0px 0px 0px 0px  black"
             }
       }
      

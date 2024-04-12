@@ -5,8 +5,8 @@ body {
 
 .answer {
     
-    width: 30vw;
-    height: 12vh;
+    width: clamp(300px, 400px , 500px);
+    height: 14vh;
     margin-top: 2%;
     display: inline-block;
     text-align: center;
@@ -14,12 +14,29 @@ body {
     color:white;
     text-shadow: 0px 0px 5px black;
     border-radius: 1vw;
+    transition: 0.1s;
     
     
+}
+.poseImg1 {
+    height: 80px;
+    position: absolute;
+    top: 14vh;
+
+    
+ 
+}
+.poseImg2 {
+    height: 80px;
+    position: absolute;
+    top: 29vh;
+    
+ 
 }
 
 #q1 {
   background-color: red;  
+
 }
 
 #q2 {
@@ -46,7 +63,6 @@ body {
     scale:0.8;
    transform: scaleX(-1);
 }
-
 #correct {
     height: 400;
     position: absolute;
